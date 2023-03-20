@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { ethers } from "ethers";
+import data from './data.json'
  
 function App() {
   let [text, setText] = useState("");
   let [savedText, setSavedText] = useState("");
+  let [address, setAddress] = useState("");
   let [connected, setConnected] = useState(false);
  
   let { ethereum } = window;
@@ -12,10 +14,9 @@ function App() {
   if (ethereum) {
  
     let abi = [
-      "function changeText(string)",
-      "function text() view returns (string)"
+      "function mint(address to)"
     ]
-    let address = "0x1C3dd5c848102ac51E1c47434a00eFbEd1F177C4";
+    let address = "0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8";
     let provider = new ethers.providers.Web3Provider(ethereum);
     let signer = provider.getSigner();
     contract = new ethers.Contract(address, abi, signer);
@@ -36,14 +37,12 @@ function App() {
  
       <form onSubmit={(e) => {
         e.preventDefault();
-        if (contract && connected) {
-          contract.changeText(text)
-            .then(() => {
-              setText("");
-            });
-        }
+          contract.mint(
+          address
+          )
+           
       }}>
-          <input type="text" placeholder="Enter text" onChange={e => setText(e.currentTarget.value)} value={text} />
+          <input type="text" placeholder="Enter address" onChange={e => setAddress(e.currentTarget.value)} value={address} />
           <input type="submit" value="Change text" />
       </form>
  
